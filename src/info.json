@@ -1,0 +1,69 @@
+[
+    {
+        "brand": "RED",
+        "brandCode": "BC120114",
+        "serverName": "r005-fe-v2",
+        "serverIP": "16.162.246.135"
+    },
+    {
+        "brand": "Sky",
+        "brandCode": "BC199115",
+        "serverName": "sk07-fe-01",
+        "serverIP": "18.166.100.224"
+    },
+    {
+        "brand": "Japan",
+        "brandCode": "BC11911",
+        "serverName": "n007-fe-01",
+        "serverIP": "18.163.151.93"
+    },
+    {
+        "brand": "NIGHT",
+        "brandCode": "BC225689",
+        "serverName": "h001-fe-01",
+        "serverIP": "16.163.34.100"
+    },
+    {
+        "brand": "NIGHT-FE",
+        "brandCode": "BC225689",
+        "serverName": "h001-fe-02",
+        "serverIP": "18.162.226.215"
+    },
+    {
+        "brand": "KUC",
+        "brandCode": "BC199117",
+        "serverName": "k112-fe-01",
+        "serverIP": "16.162.20.183"
+    },
+    {
+        "brand": "SOC-FE",
+        "brandCode": "BC170698",
+        "serverName": "v008-fe-02",
+        "serverIP": "16.162.180.139"
+    },
+    {
+        "brand": "SOC",
+        "brandCode": "BC170698",
+        "serverName": "v008-fe-01",
+        "serverIP": "18.167.114.134"
+    },
+    {
+        "brand": "388bet",
+        "brandCode": "BC125051",
+        "serverName": "t008v2-fe-01",
+        "serverIP": "18.166.19.188",
+        "openPort": ""
+    },
+    {
+        "brand": "Halfblood-FE",
+        "brandCode": "BC129056",
+        "serverName": "c001-fe-v3",
+        "serverIP": "16.163.166.215"
+    },
+    {
+        "brand": "Halfblood",
+        "brandCode": "BC129056",
+        "serverName": "m007-fe-01",
+        "serverIP": "18.166.233.247"
+    }
+]

@@ -4,9 +4,10 @@ import SearchReplace from './components/SearchReplace'
 import KeyExplorer from './components/KeyExplorer'
 import ServerList from './components/ServerList'
 import JsonTreeExplorer from './components/JsonTreeExplorer'
+import DeploymentRequest from './components/DeploymentRequest'
 
 function App() {
-  const [activeTab, setActiveTab] = useState('server-list') // 'search-replace', 'key-explorer', 'server-list', or 'json-tree'
+  const [activeTab, setActiveTab] = useState('server-list') // 'search-replace', 'key-explorer', 'server-list', 'json-tree', 'deployment-request'
   
   return (
     <div className="app">
@@ -27,16 +28,10 @@ function App() {
             JSON Tree
           </button>
           <button
-            className={`tab ${activeTab === 'search-replace' ? 'active' : ''}`}
-            onClick={() => setActiveTab('search-replace')}
+            className={`tab ${activeTab === 'deployment-request' ? 'active' : ''}`}
+            onClick={() => setActiveTab('deployment-request')}
           >
-            Search & Replace
-          </button>
-          <button
-            className={`tab ${activeTab === 'key-explorer' ? 'active' : ''}`}
-            onClick={() => setActiveTab('key-explorer')}
-          >
-            Key Explorer
+            Deployment Request
           </button>
         </div>
 
@@ -44,6 +39,7 @@ function App() {
         {activeTab === 'json-tree' && <JsonTreeExplorer />}
         {activeTab === 'key-explorer' && <KeyExplorer />}
         {activeTab === 'server-list' && <ServerList />}
+        {activeTab === 'deployment-request' && <DeploymentRequest />}
       </div>
     </div>
   )

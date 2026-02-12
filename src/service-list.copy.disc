@@ -1,0 +1,11 @@
+{
+    "auth-service": {
+        "repo": "",
+        "pipe-line": {
+            "brand": {
+                "PROD": "",
+                "STG": ""
+            }
+        }
+    }
+}

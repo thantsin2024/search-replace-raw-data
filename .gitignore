@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 
 info.json
+service-list.json

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { copyToClipboard } from '../utils/copyToClipboard'
 import serviceList from '../service-list.json'
 
@@ -6,6 +6,19 @@ const PROJECT_OPTIONS = ['9bet', 'Saobet', 'Usbet', 'Topbet', 'RED', 'SKY', 'Jap
 const SERVICE_OPTIONS = Object.keys(serviceList)
 const ENV_OPTIONS = ['Staging', 'Production']
 const REQUEST_TYPE_OPTIONS = ['STG', 'PROD']
+const ENV_VARS_AUTOCOMPLETE = [
+  'brand-specific.json',
+  'domain-mapping.json',
+  'external-service-mapping.json',
+  'secret.json',
+  'auth-service.env',
+  'transaction-service.env',
+  'cms-service.env',
+  'vip-club-agent.env',
+  'worker-service.env',
+  'gateway-v3.env',
+  'socket.env',
+]
 
 function DeploymentRequest() {
   const [requestType, setRequestType] = useState('STG')
@@ -23,8 +36,60 @@ function DeploymentRequest() {
   const [envCode, setEnvCode] = useState('')
   const [showPreview, setShowPreview] = useState(false)
   const [copyFeedback, setCopyFeedback] = useState('')
+  const [showEnvVarsDropdown, setShowEnvVarsDropdown] = useState(false)
+  const [envVarsHighlightedIndex, setEnvVarsHighlightedIndex] = useState(-1)
+  const envVarsContainerRef = useRef(null)
 
   const isProd = requestType === 'PROD'
+
+  const envVarsSuggestions = ENV_VARS_AUTOCOMPLETE.filter((item) =>
+    item.toLowerCase().includes((envVarsUpdate || '').toLowerCase())
+  )
+
+  const handleEnvVarsKeyDown = (e) => {
+    if (!showEnvVarsDropdown) {
+      if (e.key === 'ArrowDown' || e.key === 'Enter') setShowEnvVarsDropdown(true)
+      return
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      if (envVarsHighlightedIndex >= 0 && envVarsSuggestions[envVarsHighlightedIndex]) {
+        setEnvVarsUpdate(envVarsSuggestions[envVarsHighlightedIndex])
+      }
+      setShowEnvVarsDropdown(false)
+      setEnvVarsHighlightedIndex(-1)
+      return
+    }
+    if (e.key === 'Escape') {
+      setShowEnvVarsDropdown(false)
+      setEnvVarsHighlightedIndex(-1)
+      return
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      setEnvVarsHighlightedIndex((i) =>
+        i < envVarsSuggestions.length - 1 ? i + 1 : 0
+      )
+      return
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      setEnvVarsHighlightedIndex((i) =>
+        i > 0 ? i - 1 : envVarsSuggestions.length - 1
+      )
+    }
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (envVarsContainerRef.current && !envVarsContainerRef.current.contains(event.target)) {
+        setShowEnvVarsDropdown(false)
+        setEnvVarsHighlightedIndex(-1)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   // Sync Project Name env, Environment, and Deploy branch with Request Type
   useEffect(() => {
@@ -317,14 +382,55 @@ function DeploymentRequest() {
 
       <div className="form-group">
         <label htmlFor="env-vars-update">Environment Variables (.env) Update (necessary)</label>
-        <input
-          id="env-vars-update"
-          type="text"
-          className="input"
-          placeholder="Brief description if .env update is needed"
-          value={envVarsUpdate}
-          onChange={(e) => setEnvVarsUpdate(e.target.value)}
-        />
+        <div
+          ref={envVarsContainerRef}
+          className={`env-vars-autocomplete ${showEnvVarsDropdown ? 'open' : ''}`}
+        >
+          <input
+            id="env-vars-update"
+            type="text"
+            className="input"
+            placeholder="e.g. secret.json or custom value"
+            value={envVarsUpdate}
+            onChange={(e) => {
+              setEnvVarsUpdate(e.target.value)
+              setShowEnvVarsDropdown(true)
+              setEnvVarsHighlightedIndex(-1)
+            }}
+            onFocus={() => setShowEnvVarsDropdown(true)}
+            onKeyDown={handleEnvVarsKeyDown}
+          />
+          {showEnvVarsDropdown && (
+            <ul
+              className="env-vars-dropdown"
+              role="listbox"
+            >
+              {envVarsSuggestions.length === 0 ? (
+                <li className="env-vars-dropdown-item env-vars-dropdown-item-empty">
+                  No match — press Enter to use current value
+                </li>
+              ) : (
+                envVarsSuggestions.map((option, index) => (
+                  <li
+                    key={option}
+                    role="option"
+                    aria-selected={index === envVarsHighlightedIndex}
+                    className={`env-vars-dropdown-item ${index === envVarsHighlightedIndex ? 'highlighted' : ''}`}
+                    onMouseDown={(e) => {
+                      e.preventDefault()
+                      setEnvVarsUpdate(option)
+                      setShowEnvVarsDropdown(false)
+                      setEnvVarsHighlightedIndex(-1)
+                    }}
+                    onMouseEnter={() => setEnvVarsHighlightedIndex(index)}
+                  >
+                    {option}
+                  </li>
+                ))
+              )}
+            </ul>
+          )}
+        </div>
       </div>
 
       <div className="form-group">
